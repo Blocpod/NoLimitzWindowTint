@@ -49,7 +49,7 @@
   } catch (e) { /* static hours remain */ }
 
   /* Shade card */
-  var ALPHA = { 50: 0.42, 35: 0.58, 20: 0.72, 15: 0.8, 5: 0.9 };
+  var ALPHA = { 70: 0.26, 35: 0.58, 20: 0.72, 15: 0.8, 5: 0.9 };
   var RULES = { car: { front: 28, rear: 15, label: "car", name: "a car's" }, suv: { front: 28, rear: 6, label: "SUV / truck", name: "an SUV, van or truck's" } };
   var state = { vlt: 15, veh: "car" };
   var tiles = $$(".tile");
@@ -109,6 +109,8 @@
   /* Quote form — sandboxed demo */
   var form = $("#quote-form");
   var done = $("[data-done]", form);
+  /* The button ships as type="button" so a no-JS visitor can't submit name and phone into the URL */
+  $(".btn--submit", form).type = "submit";
   $("[data-quote-shade]").addEventListener("click", function () {
     var r = form.querySelector('input[name="shade"][value="' + state.vlt + '%"]');
     if (r) r.checked = true;
@@ -136,9 +138,10 @@
       return;
     }
     var shade = form.querySelector('input[name="shade"]:checked').value;
-    var ws = form.querySelector('input[name="windshield"]:checked').value;
+    var pick = function (n) { return form.querySelector('input[name="' + n + '"]:checked').value.toLowerCase(); };
     $("[data-done-name]", form).textContent = ", " + name.split(/\s+/)[0];
-    $("[data-done-sum]", form).textContent = "Your request would have read: " + v.value + " · shade " + shade.toLowerCase() + " · clear UV windshield film: " + ws.toLowerCase() + ".";
+    $("[data-done-sum]", form).textContent = "Your request would have read: " + v.value + " · shade " + shade.toLowerCase() +
+      " · clear UV windshield film: " + pick("windshield") + " · basic windshield film: " + pick("basic_windshield") + " · visor strip: " + pick("visor_strip") + ".";
     form.classList.add("is-done");
     done.hidden = false;
     done.focus({ preventScroll: true });
@@ -156,12 +159,78 @@
     form.querySelector('input[name="vehicle"]').focus();
   });
 
+  /* Work gallery: filter + lightbox */
+  var grid = $("[data-work-grid]");
+  if (grid) {
+    var jobs = $$(".job", grid);
+    var filter = $("[data-work-filter]");
+    if (filter) {
+      var fbtns = $$("button", filter);
+      filter.hidden = false;
+      fbtns.forEach(function (b) {
+        b.addEventListener("click", function () {
+          var f = b.dataset.filter;
+          fbtns.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+          jobs.forEach(function (j) { j.hidden = f !== "all" && j.dataset.cat !== f; });
+        });
+      });
+    }
+    var dlg = $("[data-lb-dialog]");
+    if (dlg && typeof dlg.showModal === "function") {
+      var lbImg = $("[data-lb-img]", dlg), lbCap = $("[data-lb-cap]", dlg), lbCount = $("[data-lb-count]", dlg);
+      var cur = 0, opener = null, x0 = null;
+      var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+      var shown = function () { return jobs.filter(function (j) { return !j.hidden; }); };
+      var show = function (i) {
+        var list = shown();
+        if (!list.length) return;
+        cur = (i + list.length) % list.length;
+        var j = list[cur], im = $("img", j);
+        var full = $(".job__a", j).getAttribute("href"), pre = new Image();
+        lbImg.loading = "eager";
+        lbImg.src = im.currentSrc || im.src; /* already loaded: show it at once, then swap in the full size */
+        lbImg.dataset.want = full;
+        pre.onload = function () { if (lbImg.dataset.want === full) lbImg.src = full; };
+        pre.src = full;
+        lbImg.alt = im.alt;
+        lbCap.textContent = im.alt;
+        lbCount.textContent = pad(cur + 1) + " / " + pad(list.length);
+      };
+      jobs.forEach(function (j) {
+        $(".job__a", j).addEventListener("click", function (e) {
+          e.preventDefault();
+          opener = this;
+          show(shown().indexOf(j));
+          dlg.showModal();
+        });
+      });
+      $("[data-lb-prev]", dlg).addEventListener("click", function () { show(cur - 1); });
+      $("[data-lb-next]", dlg).addEventListener("click", function () { show(cur + 1); });
+      $("[data-lb-close]", dlg).addEventListener("click", function () { dlg.close(); });
+      dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+      dlg.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft") { e.preventDefault(); show(cur - 1); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); show(cur + 1); }
+      });
+      dlg.addEventListener("touchstart", function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      dlg.addEventListener("touchend", function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0;
+        x0 = null;
+        if (Math.abs(dx) > 48) show(cur + (dx < 0 ? 1 : -1));
+      }, { passive: true });
+      dlg.addEventListener("close", function () { if (opener) opener.focus({ preventScroll: true }); });
+    }
+  }
+
   /* Proposal pill */
   var pill = $("[data-pill]");
-  $("[data-pill-x]").addEventListener("click", function () {
-    pill.classList.add("is-gone");
-    setTimeout(function () { pill.hidden = true; }, 260);
-  });
+  if (pill) {
+    $("[data-pill-x]").addEventListener("click", function () {
+      pill.classList.add("is-gone");
+      setTimeout(function () { pill.hidden = true; }, 260);
+    });
+  }
 })();
 
 /* Mobile: move preview notice into flow below the hero so it never covers a CTA */
