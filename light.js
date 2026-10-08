@@ -2,8 +2,9 @@
    - Light chapters: green sunlight through a window lands on the page as crisp
      panes, softer the farther it falls, with mullion shadows and slow clouds.
      In the hero a palm frond's shadow sways through the light.
-   - Dark chapters (Work gallery, footer): the same light pours in as hard-edged
-     beams with dust drifting through them.
+   - Dark chapters (Work gallery, footer): the light fans in as rays from a sun
+     above the section: fine streaks that shift as leaves move outside the
+     window, drifting haze, and dust lit only inside the rays.
    - The cursor moves the sun (on touch, scrolling does), so every pane and beam
      swings with it. The shade card dims the room while it is on screen.
    Progressive enhancement: without WebGL the CSS fallback styles stay in charge. */
@@ -103,18 +104,30 @@
     " float dk=max(d0,d1);",
     " vec3 col=lite;",
     " if(dk>0.){",
-    "  vec2 r=vec2(q.x,y-(d0>0.?uDark0.x:uDark1.x));",
-    "  float u=r.x-r.y*sh+uSun*30.;",
-    "  float cb=mob?300.:520.;float bw=cb*.58;float lc=mod(u+140.,cb);",
-    "  float k=1.4+r.y*.028;",
-    "  float beam=smoothstep(-k,k,lc)*(1.-smoothstep(bw-k,bw+k,lc))*smoothstep(7.-k,7.+k,abs(lc-bw*.5));",
-    "  float bloom=smoothstep(-70.,70.,lc)*(1.-smoothstep(bw-70.,bw+70.,lc));",
-    "  float fall=exp(-r.y/680.)*(.55+.45*noise(vec2(u/260.,r.y/380.-t*.06)))*cloud*uIntro;",
+    /* rays fan out from a sun above the section; in long sections the source follows the viewport */
+    "  float top=d0>0.?uDark0.x:uDark1.x;float lift=mob?320.:520.;",
+    "  vec2 S=vec2(vw*(mob?.86:.74)+uSun*vw*.1,max(top,0.)-lift);",
+    "  vec2 v=q-S;float d=length(v);float a=atan(v.x,v.y);",
+    "  float ac=(mob?-.3:-.5)-uSun*.14+sin(uScroll*.0006+t*.05)*.07;",
+    "  float sf=.006+.006*smoothstep(400.,1600.,d);",
+    /* two windows: each aperture is split by a mullion */
+    "  float e1=abs(a-ac),e2=abs(a-ac+.44);",
+    "  float ap=max((1.-smoothstep(.24-sf,.24+sf,e1))*smoothstep(.007-sf,.007+sf,e1),",
+    "   .8*(1.-smoothstep(.15-sf,.15+sf,e2))*smoothstep(.006-sf,.006+sf,e2));",
+    "  float wide=(1.-smoothstep(.14,.5,e1))+.6*(1.-smoothstep(.06,.36,e2));",
+    /* fine streaks of uneven brightness that slowly shift, plus leaves moving outside the window */
+    "  float st=.5*noise(vec2(a*55.,t*.22))+.3*noise(vec2(a*140.+3.,t*.35))+.2*noise(vec2(a*330.+9.,t*.5));",
+    "  float leaves=.35+.65*smoothstep(.25,.75,noise(vec2(a*16.+t*.32,t*.08)));",
+    "  float rays=ap*(.32+.9*smoothstep(.3,.85,st))*leaves;",
+    "  float hz=.45+.55*noise(q/vec2(360.,240.)+vec2(t*.03,-t*.06));",
+    "  float fall=exp(-max(d-lift,0.)/(mob?650.:950.))*cloud*uIntro;",
+    "  float entry=exp(-max(y-top,0.)/150.)*step(0.,top);",
+    "  vec3 rc=mix(vec3(.70,.96,.80),EMER,smoothstep(350.,1500.,d));",
     "  vec3 dark=mix(DEEP,DEEP2,noise(q/520.+t*.01));",
-    "  dark+=mix(EMER,MINT,.45)*beam*fall*.38+EMER*bloom*fall*.07;",
+    "  dark+=rc*rays*fall*hz*.42+EMER*wide*fall*(.07+.1*entry);",
     "  vec2 dp=vec2(q.x,y+uScroll-t*7.);",
     "  float motes=dust(dp,42.,1.5,t)+dust(dp+517.,88.,2.7,t*.8)*.8;",
-    "  dark+=MINT*motes*(beam*.85+bloom*.15)*fall*1.15;",
+    "  dark+=MINT*motes*(ap*.8+wide*.12)*fall*1.2;",
     "  dark*=1.-.22*pow(abs(q.x/vw-.5)*2.,2.);",
     "  col=mix(lite,dark,dk);}",
     " col+=(hash(gl_FragCoord.xy+fract(t*7.1)*61.)-.5)*mix(.008,.026,dk)*uGrain;",
