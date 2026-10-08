@@ -10,7 +10,7 @@ Static HTML/CSS/JS. No build step, no framework.
 - `index.html`: all content, inline SVG drawings, JSON-LD structured data
 - `styles.css`: design tokens and layout
 - `main.js`: shade card, open/closed status (America/New_York), reveals, sandboxed quote form, gallery filter and photo viewer, preview notice (about 12 KB)
-- `light.js`: "Tinted Light", a single WebGL fragment shader behind the page (caustic green light, hero light shaft, cursor lens, shade-card dimming, dark-water chapters for the gallery and footer). About 10 KB, no library. Steps resolution down on slow devices, holds still for reduced motion, and leaves the CSS fallback in charge when WebGL is missing
+- `light.js`: "Window light", a single WebGL fragment shader behind the page: green sunlight through a window falls across the light sections (with a swaying palm-frond shadow in the hero), hard-edged beams with drifting dust fill the dark gallery and footer, the cursor moves the sun, and the shade card dims the room. About 12 KB, no library. Steps resolution down on slow devices, holds still for reduced motion, and leaves the CSS fallback in charge when WebGL is missing
 - `work/`: 16 job photos from the shop's own Facebook page, WebP at 480/800/1080 wide
 - `og.jpg`: 1200x630 share image for texts and social posts
 - `sitemap.xml`: the page plus image entries for every job photo
