@@ -576,3 +576,38 @@ html:has(.lb[open]) { overflow: hidden; }
 @media (max-width: 767px) {
   [data-pill].is-inline { position: static !important; display: flex; width: auto; max-width: none; margin: 8px 16px 24px; box-shadow: none; transform: none; justify-content: space-between; border-radius: 14px; }
 }
+
+/* ---------- tinted light: WebGL layer + dark chapters ---------- */
+.light { position: fixed; left: 0; top: 0; z-index: 0; display: block; width: 100%; height: 100vh; height: 100lvh; pointer-events: none; }
+.has-light main, .has-light .foot { position: relative; z-index: 1; }
+.has-light .top { background: rgba(244, 243, 239, .8); -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px); }
+.has-light .foot { background: transparent; }
+.has-light .foot__big { color: rgba(244, 243, 239, .07); }
+
+/* Work is the dark chapter. Without WebGL it keeps a still green glow. */
+.work {
+  padding-top: clamp(88px, 11vw, 160px);
+  padding-bottom: calc(var(--sec) + 24px);
+  background:
+    radial-gradient(120% 60% at 18% 0%, rgba(30, 140, 90, .22), transparent 62%),
+    radial-gradient(90% 50% at 86% 100%, rgba(125, 203, 159, .1), transparent 60%),
+    #0A1A13;
+  color: var(--bone);
+}
+.has-light .work { background: transparent; }
+.work .sec-head { border-top-color: rgba(244, 243, 239, .55); }
+.work .sec-head__i, .work .job__n { color: var(--signal); }
+.work .sec-head__r, .work .job__k, .work .work__credit { color: #9DB0A5; }
+.work .body { color: #C9D3CC; }
+.work .work__filter button { background: transparent; border-color: rgba(244, 243, 239, .32); color: var(--bone); }
+.work .work__filter button .mono { color: #9DB0A5; }
+.work .work__filter button:hover { border-color: var(--bone); }
+.work .work__filter button[aria-pressed="true"] { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+.work .work__filter button[aria-pressed="true"] .mono { color: var(--ink-3); }
+.work .job__a { background: #12251C; }
+.work .job__a::after { box-shadow: inset 0 0 0 1px rgba(244, 243, 239, .08); }
+.work .job__cap { border-top-color: rgba(244, 243, 239, .5); }
+.work .job__t { color: var(--bone); }
+.work .work__foot { border-top-color: rgba(244, 243, 239, .18); }
+.work .btn--line { border-color: rgba(244, 243, 239, .6); color: var(--bone); }
+.work .btn--line:hover { background: var(--bone); color: var(--ink); }

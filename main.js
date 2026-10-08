@@ -58,7 +58,7 @@
   function verdict(ok) {
     return ok ? '<span class="v v--ok">Meets guide</span>' : '<span class="v v--no">Too dark</span>';
   }
-  function render() {
+  function render(user) {
     var r = RULES[state.veh], s = state.vlt, a = ALPHA[s];
     tiles.forEach(function (t) {
       var on = +t.dataset.vlt === s;
@@ -89,6 +89,8 @@
     $("[data-read-vlt]").textContent = s + "%";
     $("[data-read-veh]").textContent = r.label;
     $("[data-quote-vlt]").textContent = s + "%";
+    /* light.js listens: the room dims to the chosen shade while the card is on screen */
+    if (window.CustomEvent) document.dispatchEvent(new CustomEvent("nl:shade", { detail: { vlt: s, user: !!user } }));
   }
   function radioKeys(list, onPick) {
     list.forEach(function (el, i) {
@@ -102,8 +104,8 @@
       });
     });
   }
-  radioKeys(tiles, function (t) { state.vlt = +t.dataset.vlt; render(); });
-  radioKeys(segs, function (b) { state.veh = b.dataset.veh; render(); });
+  radioKeys(tiles, function (t) { state.vlt = +t.dataset.vlt; render(true); });
+  radioKeys(segs, function (b) { state.veh = b.dataset.veh; render(true); });
   render();
 
   /* Quote form — sandboxed demo */
@@ -141,7 +143,7 @@
     var pick = function (n) { return form.querySelector('input[name="' + n + '"]:checked').value.toLowerCase(); };
     $("[data-done-name]", form).textContent = ", " + name.split(/\s+/)[0];
     $("[data-done-sum]", form).textContent = "Your request would have read: " + v.value + " · shade " + shade.toLowerCase() +
-      " · clear UV windshield film: " + pick("windshield") + " · basic windshield film: " + pick("basic_windshield") + " · visor strip: " + pick("visor_strip") + ".";
+      " · clear UV windshield film: " + pick("windshield") + " · ceramic windshield film: " + pick("ceramic_windshield") + " · basic windshield film: " + pick("basic_windshield") + " · visor strip: " + pick("visor_strip") + ".";
     form.classList.add("is-done");
     done.hidden = false;
     done.focus({ preventScroll: true });
