@@ -487,6 +487,10 @@ html:has(.lb[open]) { overflow: hidden; }
 .yn__row:last-child { padding-bottom: 0; }
 .yn__q { float: left; margin: 0; padding: 0 12px 0 0; font-size: 15px; font-weight: 500; line-height: 46px; color: var(--ink); }
 .yn__row .chips { float: right; flex-wrap: nowrap; }
+.windshield-shades { min-width: 0; margin: 12px 0 18px; padding: 0; border: 0; }
+.windshield-shades__q { padding: 0; margin-bottom: 10px; font-size: 14px; font-weight: 500; color: var(--ink-2); }
+.windshield-shades .chip { max-width: 100%; }
+.windshield-shades .chip span { padding-block: 10px; }
 .f--two .field + .field { margin-top: 16px; }
 .field label { display: block; font-size: 14px; font-weight: 500; color: var(--ink-2); margin-bottom: 6px; }
 .field input {

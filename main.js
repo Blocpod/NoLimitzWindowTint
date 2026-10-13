@@ -111,6 +111,16 @@
   /* Quote form — sandboxed demo */
   var form = $("#quote-form");
   var done = $("[data-done]", form);
+  var windshieldShades = $("[data-windshield-shades]", form);
+  function syncWindshieldShades() {
+    var enabled = form.querySelector('input[name="ceramic_windshield"]:checked').value === "Yes";
+    windshieldShades.hidden = !enabled;
+    windshieldShades.disabled = !enabled;
+  }
+  $$('input[name="ceramic_windshield"]', form).forEach(function (r) {
+    r.addEventListener("change", syncWindshieldShades);
+  });
+  syncWindshieldShades();
   /* The button ships as type="button" so a no-JS visitor can't submit name and phone into the URL */
   $(".btn--submit", form).type = "submit";
   $("[data-quote-shade]").addEventListener("click", function () {
@@ -141,9 +151,11 @@
     }
     var shade = form.querySelector('input[name="shade"]:checked').value;
     var pick = function (n) { return form.querySelector('input[name="' + n + '"]:checked').value.toLowerCase(); };
+    var ceramicWindshield = pick("ceramic_windshield");
+    if (ceramicWindshield === "yes") ceramicWindshield += " (" + pick("ceramic_windshield_shade") + ")";
     $("[data-done-name]", form).textContent = ", " + name.split(/\s+/)[0];
     $("[data-done-sum]", form).textContent = "Your request would have read: " + v.value + " · shade " + shade.toLowerCase() +
-      " · clear UV windshield film: " + pick("windshield") + " · ceramic windshield film: " + pick("ceramic_windshield") + " · basic windshield film: " + pick("basic_windshield") + " · visor strip: " + pick("visor_strip") + ".";
+      " · ceramic windshield film: " + ceramicWindshield + " · visor strip: " + pick("visor_strip") + ".";
     form.classList.add("is-done");
     done.hidden = false;
     done.focus({ preventScroll: true });
@@ -156,6 +168,7 @@
   $$('input[name="vehicle"]', form).forEach(function (r) { r.addEventListener("change", function () { showErr("vehicle", false); }); });
   $("[data-reset]", form).addEventListener("click", function () {
     form.reset();
+    syncWindshieldShades();
     form.classList.remove("is-done");
     done.hidden = true;
     form.querySelector('input[name="vehicle"]').focus();
