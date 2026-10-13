@@ -102,8 +102,7 @@ ol, ul { list-style: none; }
 .top.is-stuck { border-bottom-color: var(--rule); }
 .top__in { height: var(--top-h); display: flex; align-items: center; gap: 24px; }
 .brand { display: inline-flex; align-items: center; gap: 12px; flex-shrink: 0; text-decoration: none; min-height: 44px; }
-.brand__logo { width: auto; height: 76px; object-fit: contain; }
-.brand__name { font-weight: 800; font-size: 20px; letter-spacing: -.03em; text-transform: uppercase; white-space: nowrap; }
+.brand__logo { width: 240px; height: 80px; object-fit: contain; }
 .nav { display: none; margin-left: auto; gap: 4px; }
 .nav a { font-size: 15px; text-decoration: none; padding: 10px 12px; color: var(--ink-2); border-radius: 2px; }
 .nav a:hover { color: var(--ink); background: rgba(22,24,26,.05); }
@@ -117,8 +116,7 @@ ol, ul { list-style: none; }
 .top__call-l { display: none; }
 @media (max-width: 600px) {
   .top__in { gap: 8px; }
-  .brand { gap: 8px; }
-  .brand__name { font-size: clamp(14px, 3.8vw, 18px); }
+  .brand__logo { width: clamp(150px, 45vw, 190px); height: auto; }
   .top__call { padding-inline: 8px; font-size: clamp(12px, 3.5vw, 15px); }
 }
 @media (min-width: 1080px) {
