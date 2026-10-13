@@ -25,7 +25,7 @@
   --max: 1320px;
   --sec: clamp(5rem, 10vw, 9rem);
   --ease: cubic-bezier(.2, .7, .1, 1);
-  --top-h: 64px;
+  --top-h: 88px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -101,10 +101,8 @@ ol, ul { list-style: none; }
 }
 .top.is-stuck { border-bottom-color: var(--rule); }
 .top__in { height: var(--top-h); display: flex; align-items: center; gap: 24px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; min-height: 44px; }
-.brand__mark { width: 30px; height: 18px; }
-.brand__name { font-weight: 800; font-size: 19px; letter-spacing: -.03em; text-transform: uppercase; }
-.brand__sub { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding-left: 10px; border-left: 1px solid var(--rule-2); line-height: 1; padding-block: 3px; }
+.brand { display: inline-flex; align-items: center; flex-shrink: 0; text-decoration: none; min-height: 44px; }
+.brand__logo { width: auto; height: 72px; object-fit: contain; }
 .nav { display: none; margin-left: auto; gap: 4px; }
 .nav a { font-size: 15px; text-decoration: none; padding: 10px 12px; color: var(--ink-2); border-radius: 2px; }
 .nav a:hover { color: var(--ink); background: rgba(22,24,26,.05); }
@@ -116,7 +114,6 @@ ol, ul { list-style: none; }
 }
 .top__call:hover { background: var(--ink); color: var(--bone); }
 .top__call-l { display: none; }
-@media (max-width: 420px) { .brand__sub { display: none; } }
 @media (min-width: 1080px) {
   .nav { display: flex; }
   .top__call { margin-left: 12px; }
@@ -526,7 +523,8 @@ html:has(.lb[open]) { overflow: hidden; }
 
 /* ---------- footer ---------- */
 .foot { background: var(--ink); color: #D9D8D2; padding: clamp(56px, 8vw, 96px) 0 calc(40px + env(safe-area-inset-bottom)); overflow: hidden; }
-.foot__big { font-size: min(calc((100vw - 2 * var(--g)) / 5.12), calc(var(--max) / 5.12)); font-weight: 800; letter-spacing: -.06em; line-height: .8; color: #25282B; text-transform: uppercase; white-space: nowrap; margin-left: -.04em; user-select: none; }
+.foot__brand { display: inline-block; max-width: 100%; }
+.foot__logo { width: clamp(180px, 24vw, 280px); height: auto; object-fit: contain; }
 .foot__grid { display: grid; gap: 28px; margin-top: clamp(40px, 6vw, 72px); padding-top: 24px; border-top: 1px solid #34383B; font-size: 16px; line-height: 1.6; }
 .foot__k { color: #9A9C9C; margin-bottom: 8px; font-size: 11px; }
 .foot a { color: #F4F3EF; text-underline-offset: 3px; text-decoration-color: #5E6264; }
@@ -586,7 +584,6 @@ html:has(.lb[open]) { overflow: hidden; }
 .has-light main, .has-light .foot { position: relative; z-index: 1; }
 .has-light .top { background: rgba(244, 243, 239, .8); -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px); }
 .has-light .foot { background: transparent; }
-.has-light .foot__big { color: rgba(244, 243, 239, .07); }
 
 /* Work is the dark chapter. Without WebGL it keeps a still green glow. */
 .work {
